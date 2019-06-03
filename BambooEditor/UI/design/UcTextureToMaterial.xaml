@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="BambooEditor.UI.design.UcTextureToMaterial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.design"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="101*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="3">
+            <Button x:Name="btnRefresh" VerticalAlignment="Center" Click="BtnRefresh_Click">Refresh</Button>
+            <TextBlock VerticalAlignment="Center" Margin="10,0">Search</TextBlock>
+            <TextBox x:Name="txtSearch" Width="200" KeyDown="TxtSearch_KeyDown"></TextBox>
+            <CheckBox x:Name="chkUnclassified" Margin="8, 0">unclassified</CheckBox>
+            <TextBlock Margin="10,0"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Margin="10,0">Category</TextBlock>
+            <local:UcCategorySelector x:Name="cateSelector" VerticalAlignment="Center"></local:UcCategorySelector>
+            <Button x:Name="btnCreateMaterials" Click="BtnCreateMaterials_Click" VerticalAlignment="Center" Margin="10, 0">Create Materials</Button>
+        </StackPanel>
+
+        <Label x:Name="lblInfo" Grid.Row="1" Grid.ColumnSpan="3"/>
+        <ListBox Grid.Row="2" Grid.Column="0" x:Name="listObjs" SelectionChanged="ListObjs_SelectionChanged" ScrollViewer.ScrollChanged="ListObjs_ScrollChanged" SelectionMode="Extended">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel MaxWidth="{Binding ActualWidth, ElementName=listObjs}" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Width="128" Height="128">
+                        <TextBlock Text="{Binding name}" ToolTip="{Binding modifiedTime}" HorizontalAlignment="Center" DockPanel.Dock="Bottom"></TextBlock>
+                        <Image Source="{Binding IconUrl}"></Image>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <GridSplitter Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+        <DockPanel Grid.Row="2" Grid.Column="2" >
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <Label>selected</Label>
+                <Label x:Name="lblSelectedCount" Margin="4,0">0</Label>
+            </StackPanel>
+            <ListBox x:Name="listSelectObjs"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

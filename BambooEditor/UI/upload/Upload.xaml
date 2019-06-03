@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="BambooEditor.UI.upload.Upload"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.upload"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1280" AllowDrop="True" Drop="UserControl_Drop">
+    <DockPanel>
+        <!--toolbar buttons-->
+        <DockPanel DockPanel.Dock="Top" Margin="0,5">
+            <TextBlock x:Name="lblProjdir" VerticalAlignment="Center" Margin="5,0" ToolTip=".uproject文件所在目录，支持项目文件夹拖拽">项目地址</TextBlock>
+            <TextBox x:Name="txtProjectDir" MinWidth="250" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="5,0" KeyDown="TxtProjectDir_KeyDown" ToolTip=".uproject文件所在目录，支持项目文件夹拖拽"></TextBox>
+
+            <Button x:Name="btnReload" VerticalAlignment="Center" Margin="5,0" Click="BtnReload_Click">1, 本地清单</Button>
+            <Button x:Name="btnCheckServerDataCount" Margin="5,0" Click="BtnCheckServerDataCount_Click">数量</Button>
+            <Button x:Name="btnCheckOnServer" VerticalAlignment="Center" Margin="5,0,0,0" Click="BtnCheckOnServer_Click">2, 服务器加载</Button>
+            <Button x:Name="btnLoadServerDataFromCache" VerticalAlignment="Center" Click="BtnLoadServerDataFromCache_Click">缓存</Button>
+            <CheckBox x:Name="chkPullFullData" IsChecked="True">详情</CheckBox>
+            <Button x:Name="btnCheckForUpload" VerticalAlignment="Center" Margin="5,0" Click="BtnCheckForUpload_Click">3, 上传检查</Button>
+            <Button x:Name="btnUpload" VerticalAlignment="Center" Margin="5,0" Click="BtnUpload_Click">4, 上传</Button>
+            <Button x:Name="btnDownloadAllAssets" VerticalAlignment="Center" Margin="5,0" Click="BtnDownloadAllAssets_Click">下载资源</Button>
+            <Button Click="BtnDownloadSizeCheck_Click">下载大小</Button>            
+            <Button x:Name="btnExpandSecondToolbar" Click="BtnExpandSecondToolbar_Click" ToolTip="展开额外工具栏" >V</Button>
+            <RadioButton x:Name="rdoFileList" IsChecked="true" Checked="RdoFileList_Checked" ToolTip="文件列表">文件</RadioButton>
+            <RadioButton x:Name="rdoUploadList" Checked="RdoUploadList_Checked" ToolTip="上传清单">上传</RadioButton>
+            <RadioButton x:Name="rdoProductList" Checked="RdoProductList_Checked" ToolTip="产品列表">产品</RadioButton>
+            <TextBlock></TextBlock>
+        </DockPanel>
+        <!--second toolbar-->
+        <StackPanel x:Name="dockSecondToolbar" Visibility="Collapsed" DockPanel.Dock="Top" Margin="0,5" Orientation="Horizontal">
+            <Button x:Name="btnDumpAllFiles" Click="BtnDumpAllFiles_Click">导出文件清单</Button>
+            <TextBlock VerticalAlignment="Center">服务器文件夹</TextBlock>
+            <TextBox x:Name="txtServerFileDir" MinWidth="200" ToolTip="此路径应该映射为服务器的/upload文件夹"></TextBox>
+            <TextBlock VerticalAlignment="Center">本地接收文件夹</TextBlock>
+            <TextBox x:Name="txtLocalFileDir" MinWidth="200" ToolTip="此路径为接收文件夹，包含.uproject的文件夹或者空文件夹"></TextBox>
+            <Button x:Name="btnTransferFiles" Click="BtnTransferFiles_Click" ToolTip="把服务器的资源文件根据服务器文件清单或者缓存中的文件清单，把Content下的资源文件下载过来">开始转移文件</Button>
+            <TextBox x:Name="txtDebugFind" ToolTip="debug find, input packagename to find object, preess enter" KeyDown="TxtDebugFind_KeyDown"></TextBox>
+        </StackPanel>
+        <!--status bar-->
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,5">
+            <ProgressBar x:Name="progressbar" Width="100" Height="15" VerticalAlignment="Center" Value="{Binding Percent}"></ProgressBar>
+            <TextBlock x:Name="lblProgCur" VerticalAlignment="Center" Margin="2, 0" Text="{Binding CurPos}" FontFamily="Consolas"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Margin="1, 0" Text="/" FontFamily="Consolas"></TextBlock>
+            <TextBlock x:Name="lblProgTotal" VerticalAlignment="Center" Margin="2, 0" Text="{Binding Total}" FontFamily="Consolas"></TextBlock>
+            <TextBlock x:Name="lblStatus" VerticalAlignment="Center" Margin="5, 0" Text="{Binding Status}" FontFamily="Consolas"></TextBlock>
+
+            <TextBlock x:Name="lblLocalStatus" VerticalAlignment="Center" FontFamily="Consolas" Margin="5, 0" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">local</TextBlock>
+            <TextBlock x:Name="lblServerCacheStatus" VerticalAlignment="Center" FontFamily="Consolas" Margin="5, 0" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">server cache</TextBlock>
+            <TextBlock x:Name="lblServerDataStatus" VerticalAlignment="Center" FontFamily="Consolas" Margin="5, 0" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">server</TextBlock>
+            <TextBlock x:Name="lblListStatus" VerticalAlignment="Center" FontFamily="Consolas" Margin="5, 0" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">list</TextBlock>
+
+            <TextBlock></TextBlock>
+        </DockPanel>
+
+        <TabControl x:Name="tabList" BorderBrush="Snow">
+            <TabItem>
+                <DockPanel>
+                    <!--toolbar filters-->
+                    <DockPanel DockPanel.Dock="Top">
+                        <TextBlock Margin="5,0" VerticalAlignment="Center" Width="{Binding ElementName=lblProjdir,Path=ActualWidth}">SEARCH</TextBlock>
+                        <TextBox x:Name="txtSearchKey" Margin="5,0" MinWidth="100" KeyDown="TxtSearchKey_KeyDown"></TextBox>
+                        <TextBlock Margin="5,0" VerticalAlignment="Center">REGION</TextBlock>
+                        <RadioButton x:Name="rdoFilterAllRegion" Margin="5,0" IsChecked="True" Checked="RdoFilterAllRegion_Checked">所有</RadioButton>
+                        <RadioButton x:Name="rdoFilterLocal" Margin="5,0" Checked="RdoFilterLocal_Checked">本地</RadioButton>
+                        <RadioButton x:Name="rdoFilterServer" Margin="5,0" Checked="RdoFilterServer_Checked">服务器</RadioButton>
+                        <TextBlock Margin="5,0" VerticalAlignment="Center">|</TextBlock>
+                        <CheckBox x:Name="chkFilterWorkDir" Margin="5,0" IsChecked="True" Click="ChkFilterWorkDir_Click">工作目录</CheckBox>
+                        <CheckBox x:Name="chkFilterDependDir" Margin="5,0" IsChecked="True" Click="ChkFilterDependDir_Click">依赖目录</CheckBox>
+
+                        <Button x:Name="btnDelete" VerticalAlignment="Center" MinWidth="100" Margin="5,0" Click="BtnDelete_Click" ToolTip="这是从服务器删除这个对象，慎重操作">删除选中项</Button>
+                        <Button x:Name="btnDumpList" VerticalAlignment="Center" MinWidth="100" Margin="5,0" Click="BtnDumpList_Click">导出列表</Button>
+                        <Button x:Name="btnCopySelected" ToolTip="复制选中的项目到剪贴板" Click="BtnCopySelected_Click">复制选中</Button>
+
+                        <CheckBox x:Name="chkFilterMap" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterMap_Click">Map</CheckBox>
+                        <CheckBox x:Name="chkFilterMaterial" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterMaterial_Click">Material</CheckBox>
+                        <CheckBox x:Name="chkFilterTexture" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterTexture_Click">Texture</CheckBox>
+                        <CheckBox x:Name="chkFilterStaticMesh" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterStaticMesh_Click">StaticMesh</CheckBox>
+                        <!--<CheckBox x:Name="chkFilterProduct" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterProduct_Click">Product</CheckBox>-->
+                        <CheckBox x:Name="chkFilterTypeAll" Margin="5,0" DockPanel.Dock="Right" IsChecked="True" Click="ChkFilterTypeAll_Click">ALL</CheckBox>
+                        <TextBlock Margin="5,0" DockPanel.Dock="Right" VerticalAlignment="Center">TYPE</TextBlock>
+                        <TextBlock></TextBlock>
+                    </DockPanel>
+                    <DockPanel>
+                        <ListView x:Name="listFiles" FontFamily="Consolas" SelectionChanged="ListFiles_SelectionChanged">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridViewColumn Header="Package" Width="300" DisplayMemberBinding="{Binding Package}" />
+                                    <GridViewColumn Header="ObjId" Width="120" DisplayMemberBinding="{Binding ObjId}" />
+                                    <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Name}" />
+                                    <GridViewColumn Header="UpdateTime" Width="150" DisplayMemberBinding="{Binding UpdateTm}" />
+                                    <GridViewColumn Header="Class" Width="180" DisplayMemberBinding="{Binding Class}" />
+                                    <GridViewColumn Header="Size" Width="100" DisplayMemberBinding="{Binding SizeStr}" />
+                                    <!--<GridViewColumn Header="FileId" Width="120" DisplayMemberBinding="{Binding FileId}" />-->
+                                    <GridViewColumn Width="25" DisplayMemberBinding="{Binding CookedFileState}" >
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="CF" ToolTip="Cooked file state, does files existed in saved/cooked/content" ></TextBlock>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="25" DisplayMemberBinding="{Binding UncookedFileState}" >
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="UF" ToolTip="UnCooked file state, does file existed in /content dir" ></TextBlock>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="25" DisplayMemberBinding="{Binding SourceFileState}" >
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="SF" ToolTip="Source file state, does source file existed" ></TextBlock>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Status" Width="170" DisplayMemberBinding="{Binding Status}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                </DockPanel>
+            </TabItem>
+            <TabItem>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Label>search</Label>
+                        <TextBox x:Name="txtSearchUploadList" Margin="5,0" MinWidth="100" KeyDown="TxtSearchUploadList_KeyDown"></TextBox>
+                    </StackPanel>
+                    <ListView x:Name="listUploadList" FontFamily="Consolas" SelectionChanged="ListFiles_SelectionChanged">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="Package" Width="300" DisplayMemberBinding="{Binding Path=File.Package}" />
+                                <GridViewColumn Header="Class" Width="180" DisplayMemberBinding="{Binding Path=File.Class}" />
+                                <GridViewColumn Header="Operate" Width="120" DisplayMemberBinding="{Binding Operate}" />
+                                <GridViewColumn Header="Target" Width="120" DisplayMemberBinding="{Binding Target}" />
+                                <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}" />
+                                <GridViewColumn Header="UpdateTime" Width="150" DisplayMemberBinding="{Binding Path=File.UpdateTm}" />
+                                <GridViewColumn Header="Size" Width="100" DisplayMemberBinding="{Binding Path=File.SizeStr}" />
+                                <GridViewColumn Header="ObjId" Width="120" DisplayMemberBinding="{Binding Path=File.ObjId}" />
+                                <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Path=File.Name}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Label>search</Label>
+                        <TextBox x:Name="txtSearchProductList" Margin="5,0" MinWidth="100" KeyDown="TxtSearchProductList_KeyDown"></TextBox>
+                    </StackPanel>
+                    <ListView x:Name="listProducts" FontFamily="Consolas" SelectionChanged="ListFiles_SelectionChanged">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="Package" Width="300" DisplayMemberBinding="{Binding Package}" />
+                                <GridViewColumn Header="ObjId" Width="120" DisplayMemberBinding="{Binding ObjId}" />
+                                <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="UpdateTime" Width="150" DisplayMemberBinding="{Binding UpdateTm}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

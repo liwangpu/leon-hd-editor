@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="BambooEditor.UI.design.category.UcCategoryEditorMaterial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.design.category"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+    <DockPanel Margin="8">
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <Label DockPanel.Dock="Left" Width="100">Template</Label>
+            <Button x:Name="btnRefreshTemplates" Click="btnRefreshTemplates_Click" DockPanel.Dock="Right">Refresh</Button>
+            <ComboBox x:Name="cmbTemplate" IsEditable="False" SelectionChanged="cmbTemplate_SelectionChanged">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel MaxWidth="{Binding ActualWidth, ElementName=cmbTemplate}" />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock Text="{Binding name}" HorizontalAlignment="Center" DockPanel.Dock="Bottom"></TextBlock>
+                            <Image Source="{Binding IconUrl}" Width="128" Height="128"></Image>
+                        </DockPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <Label DockPanel.Dock="Left" Width="100">ColorParamName</Label>
+            <TextBox x:Name="txtColorParamName">BaseColor</TextBox>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <Label DockPanel.Dock="Left" Width="100">MatUrl</Label>
+            <TextBox x:Name="txtMatUrl" IsReadOnly="True"></TextBox>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <Label DockPanel.Dock="Left" Width="100">MatPackageName</Label>
+            <TextBox x:Name="txtMatPackageName" IsReadOnly="True"></TextBox>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <Label DockPanel.Dock="Left" Width="100">Fill with</Label>
+            <Button x:Name="btnFillCategory" Click="btnFillCategory_Click" DockPanel.Dock="Right" Background="DarkSalmon">Apply</Button>
+            <TextBlock x:Name="lblItemsCount" DockPanel.Dock="Right" Margin="4,0" VerticalAlignment="Center">3</TextBlock>
+            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="4,0">items count</TextBlock>
+            <ComboBox x:Name="cmbFill" IsEditable="False" SelectionChanged="cmbFill_SelectionChanged"></ComboBox>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0, 4">
+            <ListBox x:Name="listColors">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel MaxWidth="{Binding ActualWidth, ElementName=listColors}" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel Width="128" Height="64">
+                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" DockPanel.Dock="Bottom"></TextBlock>
+                            <DockPanel Background="{Binding Color}"></DockPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </DockPanel>
+</UserControl>

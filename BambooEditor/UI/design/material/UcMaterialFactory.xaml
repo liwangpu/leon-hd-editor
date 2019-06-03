@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="BambooEditor.UI.design.material.UcMaterialFactory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.design.material"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1200" AllowDrop="True" Drop="UserControl_Drop" Loaded="UserControl_Loaded">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="lblProjdir" VerticalAlignment="Center" Margin="5,0" ToolTip=".uproject文件所在目录，支持项目文件夹拖拽">项目地址</TextBlock>
+                <TextBox x:Name="txtProjectDir" MinWidth="250" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="5,0" KeyDown="TxtProjectDir_KeyDown" ToolTip=".uproject文件所在目录，支持项目文件夹拖拽"></TextBox>
+                <Button x:Name="btnCreateDirs" Click="BtnCreateDirs_Click">生成材质文件夹</Button>
+                <Button x:Name="btnOpenDir" Click="BtnOpenDir_Click">打开材质文件夹</Button>
+                <Button x:Name="btnRefresh" Click="BtnRefresh_Click">重新检查</Button>
+                <Button Click="BtnUpload_Click">上传材质</Button>
+                <Button Click="BtnHelp_Click">帮助</Button>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Margin="5,0">搜索</TextBlock>
+                <TextBox x:Name="txtSearch" MinWidth="100" TextChanged="TxtSearch_TextChanged" KeyDown="TxtSearch_KeyDown"></TextBox>
+            </StackPanel>
+            <Label></Label>
+        </DockPanel>
+        <ListView x:Name="listFiles" FontFamily="Consolas">
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn Header="Category" Width="300" DisplayMemberBinding="{Binding CategoryPath}" />
+                    <GridViewColumn Header="Material" Width="150" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Size" Width="150" DisplayMemberBinding="{Binding UpdateTm}" />
+                    <GridViewColumn Header="Textues" Width="600" DisplayMemberBinding="{Binding Textures}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>

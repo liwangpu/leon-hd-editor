@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="BambooEditor.UI.design.UcColors"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.design"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+    <DockPanel>
+        <ListBox x:Name="listTypes" DockPanel.Dock="Left" SelectionChanged="listTypes_SelectionChanged">
+            
+        </ListBox>
+        <ListBox x:Name="listColors">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel MaxWidth="{Binding ActualWidth, ElementName=listColors}" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Width="128" Height="64">
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" DockPanel.Dock="Bottom"></TextBlock>
+                        <DockPanel Background="{Binding Color}"></DockPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>

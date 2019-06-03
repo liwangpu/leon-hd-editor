@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="BambooEditor.UI.design.UcADUDToolbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BambooEditor.UI.design"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="btnAdd" Click="btnAdd_Click" ToolTip="create or add object" Grid.Column="0">+</Button>
+        <Button x:Name="btnDelete" Click="btnDelete_Click" ToolTip="remove or delete selected object" Grid.Column="1">x</Button>
+        <Button x:Name="btnUp" Click="btnUp_Click" ToolTip="move selected object up" Grid.Column="2">↑</Button>
+        <Button x:Name="btnDown" Click="btnDown_Click" ToolTip="move selected object down" Grid.Column="3">↓</Button>
+    </Grid>
+</UserControl>

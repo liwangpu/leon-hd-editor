@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BambooEditor", "BambooEditor\BambooEditor.csproj", "{B6790B90-84E8-4E60-AD19-BF69D721194F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6790B90-84E8-4E60-AD19-BF69D721194F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6790B90-84E8-4E60-AD19-BF69D721194F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6790B90-84E8-4E60-AD19-BF69D721194F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6790B90-84E8-4E60-AD19-BF69D721194F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70570612-60D8-43C5-86C4-E335814367C0}
+	EndGlobalSection
+EndGlobal
